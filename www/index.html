@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090611">
+<title>HAMAD MUSIC</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:radial-gradient(circle at top,#281044,#090611 55%);
+ color:white;font-family:Arial,sans-serif;min-height:100vh;
+ display:flex;justify-content:center;padding:25px 15px
+}
+.app{width:100%;max-width:430px}
+.logo{text-align:center;margin:15px 0 28px}
+.logo h1{font-size:30px;letter-spacing:3px;margin:0;color:#d9b56d}
+.logo p{color:#aaa;font-size:13px}
+.cover{
+ height:230px;border-radius:25px;
+ background:linear-gradient(145deg,#49216b,#160d27 60%,#090611);
+ display:flex;align-items:center;justify-content:center;
+ box-shadow:0 15px 45px #0008;border:1px solid #ffffff18;
+}
+.disc{
+ width:145px;height:145px;border-radius:50%;
+ background:repeating-radial-gradient(circle,#17121e 0 8px,#33213f 9px 12px);
+ display:flex;align-items:center;justify-content:center;
+ border:5px solid #d5ad63;box-shadow:0 0 35px #b47be755
+}
+.disc span{font-size:28px;color:#e5c47d;font-weight:bold}
+.now{text-align:center;margin:22px 0}
+.now h2{font-size:20px;margin:0 0 9px}
+.now p{color:#bda6d3;margin:0;font-size:13px}
+.progress{width:100%;accent-color:#d5ad63}
+.times{display:flex;justify-content:space-between;color:#aaa;font-size:12px}
+.controls{display:flex;align-items:center;justify-content:center;gap:25px;margin:22px 0}
+.controls button{
+ border:0;color:white;background:transparent;font-size:25px;cursor:pointer
+}
+.controls .play{
+ width:65px;height:65px;border-radius:50%;
+ background:linear-gradient(135deg,#e3c47f,#a87837);
+ color:#170e20;font-size:27px
+}
+.list-title{color:#d9b56d;margin:28px 0 12px}
+.track{
+ display:flex;align-items:center;gap:12px;padding:13px;
+ border-radius:13px;background:#ffffff0a;margin:8px 0;
+ border:1px solid #ffffff0b;cursor:pointer
+}
+.track.active{background:#6d3c8c55;border-color:#c69a58}
+.number{color:#d9b56d;width:22px}
+.track-name{font-size:14px;flex:1}
+.track small{color:#aaa}
+.footer{text-align:center;color:#777;font-size:12px;margin:30px 0 10px}
+
+#intro{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;background:radial-gradient(circle at center,#482365,#10091b 65%,#050309)}
+.intro-content{width:100%;max-width:400px}
+.intro-logo{font-size:30px;letter-spacing:4px;color:#e5c47d;font-weight:bold;margin-bottom:65px}
+.intro-small{font-size:18px;color:#ddd;margin-bottom:18px}
+.intro-name{font-size:29px;color:#e5c47d;font-weight:bold}
+.intro-credit{margin-top:45px;color:#cbb6dd}
+.intro-button{margin-top:65px;padding:15px 35px;border:0;border-radius:30px;background:linear-gradient(135deg,#e3c47f,#a87837);color:#170e20;font-weight:bold;font-size:16px}
+.intro-line{width:90px;height:2px;background:#d9b56d;margin:25px auto}
+
+</style>
+</head>
+<body>
+
+<div id="intro">
+ <div class="intro-content">
+  <div class="intro-logo">HAMAD MUSIC</div>
+  <div class="intro-line"></div>
+  <div class="intro-small">إهداء إلى</div>
+  <div class="intro-name">Mona Badr El-Din</div>
+  <div class="intro-line"></div>
+  <div class="intro-credit">تصميم حمد عبدالله</div>
+  <button class="intro-button" onclick="document.getElementById('intro').remove()">دخول إلى الموسيقى ♫</button>
+ </div>
+</div>
+
+<div class="app">
+ <header class="logo">
+  <h1>HAMAD MUSIC</h1>
+  <p>YOUR MUSIC · YOUR MOMENT</p>
+ </header>
+
+ <div class="cover">
+  <div class="disc"><span>HM</span></div>
+ </div>
+
+ <section class="now">
+  <h2 id="songTitle">اختر أغنية للاستماع</h2>
+  <p>AWABTHERAPPER · HAMAD MUSIC</p>
+ </section>
+
+ <audio id="audio"></audio>
+
+ <input class="progress" id="progress" type="range" min="0" max="100" value="0">
+ <div class="times">
+  <span id="currentTime">0:00</span>
+  <span id="duration">0:00</span>
+ </div>
+
+ <div class="controls">
+  <button id="prev" aria-label="السابق">⏮</button>
+  <button class="play" id="play" aria-label="تشغيل">▶</button>
+  <button id="next" aria-label="التالي">⏭</button>
+ </div>
+
+ <h3 class="list-title">♫ قائمة الأغاني</h3>
+ <div id="playlist"></div>
+
+ <div class="footer">تصميم حمد عبدالله · HAMAD MUSIC</div>
+</div>
+
+<script>
+const songs = [
+ {title:"ANA MNO - أنا منو",file:"Awabtherapper - ANA MNO  أنا منو - أواب(MP3_160K).mp3"},
+ {title:"Estiraad Selah - استعراض سلاح",file:"Awabtherapper - Estiraad Selah - استعراض سلاح (official music video)(prod by mshakil)(MP3_160K).mp3"},
+ {title:"Last Player - العابث الأخير",file:"Awabtherapper - Last Player  العابث الأخير - أواب(MP3_160K).mp3"},
+ {title:"SHILIL - شليل",file:"Awabtherapper - SHILIL ft. Azza249 (Official Music Video) أواب - شليل  [Mshakil Beatz](MP3_160K).mp3"},
+ {title:"SHWAR3IAT - شوارعيات",file:"Awabtherapper - SHWAR3IAT  شوارعيات - أواب(MP3_160K).mp3"},
+ {title:"SOLO LEVELING - سولو ليفلنغ",file:"Awabtherapper - SOLO LEVELING  سولو ليفلنغ - أواب(MP3_160K).mp3"},
+ {title:"Mr. Hip Hop - مستر هيب هوب",file:"Mr. Hip Hop - Awabtherapper (Official Music Video) مستر هيب هوب - أواب  [NINJA249](MP3_160K).mp3"}
+];
+
+const audio=document.getElementById("audio");
+const playBtn=document.getElementById("play");
+const title=document.getElementById("songTitle");
+const progress=document.getElementById("progress");
+const current=document.getElementById("currentTime");
+const duration=document.getElementById("duration");
+const playlist=document.getElementById("playlist");
+let index=0;
+
+function formatTime(s){
+ if(!Number.isFinite(s))return "0:00";
+ let m=Math.floor(s/60),sec=Math.floor(s%60);
+ return m+":"+String(sec).padStart(2,"0");
+}
+
+function drawList(){
+ playlist.innerHTML="";
+ songs.forEach((song,i)=>{
+  const item=document.createElement("div");
+  item.className="track"+(i===index?" active":"");
+  item.innerHTML='<span class="number">'+(i+1)+'</span><span class="track-name"></span><small>▶</small>';
+  item.querySelector(".track-name").textContent=song.title;
+  item.onclick=()=>loadSong(i,true);
+  playlist.appendChild(item);
+ });
+}
+
+function loadSong(i,autoplay){
+ index=(i+songs.length)%songs.length;
+ audio.src="songs/"+encodeURIComponent(songs[index].file);
+ title.textContent=songs[index].title;
+ drawList();
+ if(autoplay){
+  audio.play().then(()=>playBtn.textContent="Ⅱ").catch(()=>playBtn.textContent="▶");
+ }else{
+  playBtn.textContent="▶";
+ }
+}
+
+playBtn.onclick=()=>{
+ if(!audio.src)loadSong(index,false);
+ if(audio.paused){
+  audio.play().then(()=>playBtn.textContent="Ⅱ").catch(()=>{});
+ }else{
+  audio.pause();playBtn.textContent="▶";
+ }
+};
+
+document.getElementById("next").onclick=()=>loadSong(index+1,true);
+document.getElementById("prev").onclick=()=>loadSong(index-1,true);
+
+audio.addEventListener("timeupdate",()=>{
+ if(audio.duration){
+  progress.value=(audio.currentTime/audio.duration)*100;
+  current.textContent=formatTime(audio.currentTime);
+ }
+});
+audio.addEventListener("loadedmetadata",()=>{
+ duration.textContent=formatTime(audio.duration);
+});
+audio.addEventListener("ended",()=>loadSong(index+1,true));
+audio.addEventListener("pause",()=>playBtn.textContent="▶");
+audio.addEventListener("play",()=>playBtn.textContent="Ⅱ");
+
+progress.oninput=()=>{
+ if(audio.duration)audio.currentTime=(progress.value/100)*audio.duration;
+};
+
+loadSong(0,false);
+</script>
+</body>
+</html>
